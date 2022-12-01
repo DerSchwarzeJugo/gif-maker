@@ -1,0 +1,19 @@
+.innerContentWrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: 50px 0;
+}
+
+.btnWrapper {
+	text-align: center;
+	margin-bottom: 15px;
+}
+
+input#uploader {
+	max-width: 230px;
+}
+
+video#player {
+	max-width: 100%;
+}
