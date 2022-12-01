@@ -14,12 +14,12 @@ if (crossOriginIsolated) {
 		
 		ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
 
-		ffmpeg.setProgress(({ ratio }) => {
-			updateProgressBar(ratio)
-		});
 		if (document.querySelector('.progress.hidden') != null) {
 			document.querySelector('.progress.hidden').classList.remove('hidden');
 		}
+		ffmpeg.setProgress(({ ratio }) => {
+			updateProgressBar(ratio)
+		});
 
 		await ffmpeg.run('-i', name, outputName);
 
@@ -34,9 +34,16 @@ if (crossOriginIsolated) {
 
 	const updateProgressBar = (ratio) => {
 		let progressBar = document.querySelector('.progress-bar');
-		progressBar.style.width = (Number.parseFloat(ratio) * 100).toString() + '%';
+		let percent = (Number.parseFloat(ratio) * 100).toString();
+		progressBar.style.width =  percent + '%';
 	};
-
+	
+	setInterval(() => {
+		let progressBarWidth = document.querySelector('.progress-bar').style.width;
+		if (progressBarWidth == '100%') {
+			document.querySelector('.progress').classList.add('hidden');
+		}
+	}, 5000);
 
 	document.getElementById('uploader').addEventListener('change', vidToGif);
 } else {
