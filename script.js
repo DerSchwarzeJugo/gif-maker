@@ -1,29 +1,39 @@
-const { createFFmpeg, fetchFile } = FFmpeg;
-const ffmpeg = createFFmpeg({
-	log: true,
-});
+if (crossOriginIsolated) {
+	const { createFFmpeg, fetchFile } = FFmpeg;
+	const ffmpeg = createFFmpeg({
+		log: true,
+	});
+	
+	const vidToGif = async ({ target: { files } }) => {
+		const { name } = files[0];
+		const outputName = 'output.gif';
 
-const vidToGif = async ({ target: { files } }) => {
-	const { name } = files[0];
-	await ffmpeg.load();
-	ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
-	await ffmpeg.run('-i', name, 'output.gif');
-	const data = ffmpeg.FS('readFile', 'output.gif');
-	const image = document.createElement('img');
-	document.querySelector('.innerContentWrapper').appendChild(image)
-	image.src = URL.createObjectURL(new Blob([data.buffer], { type: 'image/gif'}));
-};	
+		await ffmpeg.load();
+		ffmpeg.setProgress(({ ratio }) => {
+			updateProgressBar(ratio)
+		});
 
-const vidToMp4 = async ({ target: { files } }) => {
-	const { name } = files[0];
-	await ffmpeg.load();
-	ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
-	await ffmpeg.run('-i', name, 'output.mp4');
-	const data = ffmpeg.FS('readFile', 'output.mp4');
-	const video = document.createElement('video');
-	document.querySelector('.innerContentWrapper').appendChild(video)
-	video.controls = true
-	video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4'}));
-};	
+		ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
+		document.querySelector('.progress.hidden').classList.remove('hidden');
+		await ffmpeg.run('-i', name, outputName);
 
-document.getElementById('uploader').addEventListener('change', vidToMp4);
+		const data = ffmpeg.FS('readFile', outputName);
+		const image = document.getElementById('imgOutput');
+		const imageLink = document.getElementById('imgOutputLink');
+		imageLink.setAttribute("download", outputName);
+		image.src = URL.createObjectURL(new Blob([data.buffer], { type: 'image/gif'}));
+		imageLink.href = image.src;
+		imageLink.classList.remove('hidden');
+	};	
+
+	const updateProgressBar = (ratio) => {
+		console.log((Number.parseFloat(ratio) * 100).toString() + '%')
+		let progressBar = document.querySelector('.progress-bar');
+		progressBar.style.width = (Number.parseFloat(ratio) * 100).toString() + '%';
+	};
+
+
+	document.getElementById('uploader').addEventListener('change', vidToGif);
+} else {
+	alert('CrossOriginIsolated is false!');
+}
