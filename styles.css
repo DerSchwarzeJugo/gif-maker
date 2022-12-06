@@ -14,8 +14,12 @@
 	flex-direction: row;
 }
 
+.outputWrapper {
+	flex-direction: column;
+}
+
 @media screen and (max-width: 425px) {
-	.btnWrapper, .outputWrapper {
+	.btnWrapper {
 		flex-direction: column;
 	}
 }
