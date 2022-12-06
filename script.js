@@ -73,6 +73,16 @@ if (crossOriginIsolated) {
 		let percent = (Number.parseFloat(ratio) * 100).toString();
 		progressBar.style.width =  percent + '%';
 	};
+
+	const clicker = () => {
+		// helper function to simulate clicks
+		const clickEvent = new MouseEvent('click', {
+			view: window,
+			bubbles: true,
+			cancelable: true
+		});
+		return clickEvent;
+	};
 	
 	setInterval(() => {
 		let progressBarWidth = document.querySelector('.progress-bar').style.width;
@@ -81,8 +91,19 @@ if (crossOriginIsolated) {
 		}
 	}, 5000);
 
+	// event listeners
 	document.getElementById('vidUploader').addEventListener('change', vidToGif);
 	document.getElementById('imgUploader').addEventListener('change', imgsToGif);
+
+	document.getElementById('vidUploaderBtn').addEventListener('click', (e) => {
+		let clickEvent = clicker();
+		document.getElementById('vidUploader').dispatchEvent(clickEvent);
+	});
+
+	document.getElementById('imgUploaderBtn').addEventListener('click', (e) => {
+		let clickEvent = clicker();
+		document.getElementById('imgUploader').dispatchEvent(clickEvent);
+	});
 } else {
 	alert('CrossOriginIsolated is false!');
 }

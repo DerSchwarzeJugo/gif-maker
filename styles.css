@@ -11,7 +11,13 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
+	flex-direction: row;
+}
+
+@media screen and (max-width: 425px) {
+	.btnWrapper, .outputWrapper {
+		flex-direction: column;
+	}
 }
 
 video#player {
@@ -33,4 +39,12 @@ img, video {
 
 label {
 	margin-top: 20px;
+}
+
+.btn {
+	max-width: 100%;
+}
+
+input.btn {
+	display: none;
 }
